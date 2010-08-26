@@ -39,8 +39,10 @@ if [ -z "$name" -o -z "$version" ] ; then
   exit 1
 fi
 
+# debuild requires package names be lowercase.
+name=$(echo "$name" | tr A-Z a-z)
 set -e
+set -x
 dh_make -s -n -c blank -e $USER -p "python-${name}_${version}"
 sed -i -e "/Depends:.*$requires/! { s/^Depends: .*/&, $requires/ }" debian/control
 debuild -us -uc
-
